@@ -8,11 +8,11 @@
       </aside>
 
       <!--  右侧全体区域-->
-      <v-main class="k-relative">
-        <v-card :dark="lightoff" class="rounded-0">
+      <v-card :dark="lightoff" class="rounded-0 k-full-screen-minh">
+        <v-main class="k-relative">
           <Contents :lightoff="lightoff"/>
-        </v-card>
-      </v-main>
+        </v-main>
+      </v-card>
 
     </div>
   </div>

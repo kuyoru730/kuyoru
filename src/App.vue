@@ -3,28 +3,28 @@
     <v-app>
       <v-app-bar
           app
-          clipped-left
           class="k-relative appbar"
           :dark="lightoff"
+          clipped-left
+          tile
       >
         <v-row align="center"
                no-gutters
                dense
         >
-          <!--        1 4 1 spacer 1 1-->
-          <v-col cols="1" align-self="center">
+          <v-col cols="2">
             <v-img
                 alt="Logo"
-                class="shrink k-cursor-pointer"
+                class="shrink k-cursor-pointer k-display-inblock"
                 contain
-                :src="logo[0]"
+                :src="logos[0]"
                 transition="scale-transition"
-                height="50px"
+                height="inherit"
                 width="50px"
                 @click="reloadpage"
             />
-
           </v-col>
+          <v-spacer class="d-none d-sm-flex d-md-flex d-lg-flex d-xl-flex"></v-spacer>
           <v-col :lg="cols" :md="4" :sm="cols">
             <v-form class="mt-2">
               <v-text-field
@@ -33,7 +33,7 @@
                   color="red accent-3"
                   hide-details="auto"
                   type="text"
-                  clearable=true
+                  clearable
                   clear-icon="mdi-close"
                   :value="inputerValue"
                   v-model="inputerValue"
@@ -45,42 +45,40 @@
           </v-col>
 
           <!--        搜索图标按钮1col-->
-          <v-col cols="1">
-            <v-btn text
-                   small
-                   fab
-                   @click="changeLogoText"
-                   class="ml-2"
+          <v-btn text
+                 small
+                 fab
+                 @click="changeLogoText"
+                 class="ml-2"
+          >
+            <v-img
+                alt="searchicon"
+                :src="searchLogo"
+                contain
+                min-width="25px"
+                max-width="26px"
             >
-              <v-img
-                  alt="searchicon"
-                  :src="searchLogo"
-                  contain=true
-                  min-width="25px"
-                  max-width="26px"
-              >
-              </v-img>
-            </v-btn>
-          </v-col>
+            </v-img>
+          </v-btn>
 
           <v-spacer class="d-none d-sm-flex d-md-flex d-lg-flex d-xl-flex"></v-spacer>
 
           <v-col
-              cols="1"
+              cols="1" class="d-none d-md-flex d-lg-flex d-xl-flex"
           >
           </v-col>
 
           <v-col cols="2">
             <div id="rightBtns" class="k-display-flex-around">
               <!--        电源按钮-->
-              <div id="switch">
+              <div @mouseenter="iconcolor4='orange' ; switchtip=true" @mouseleave="iconcolor4=''; switchtip=false"
+                   id="switch" class="d-none d-md-flex d-lg-flex d-xl-flex">
                 <v-btn
+                    retain-focus-on-click
                     small
                     fab
                     text
                     @click="lightoff=!lightoff"
-                    @mouseenter="iconcolor4='orange' ; switchtip=true"
-                    @mouseleave="iconcolor4=''; switchtip=false"
                 >
                   <v-icon
                       :color="iconcolor4"
@@ -89,7 +87,7 @@
                 </v-btn>
                 <v-expand-transition>
                   <v-card v-show="switchtip"
-                          class="k-absolute k-font-size-13 k-font-style-i k-opacity-8 k-box-sizing pl-1 pt-1"
+                          class="k-absolute k-t-50 k-font-size-13 k-font-style-i k-opacity-8 k-box-sizing pl-1 pt-1"
                           width="45px" height="30px"><span v-text="lightoff==true?'开 灯':'关 灯'"></span></v-card>
                 </v-expand-transition>
               </div>
@@ -106,7 +104,7 @@
                     :href="userlogin"
                     text
                     @mouseenter="iconcolor1='light-blue lighten-2'"
-                    @mouseleave="iconcolor1=globalbtncolor"
+                    @mouseleave="iconcolor1=''"
                 >
                   <v-icon v-text="loginicon" :color="iconcolor1"></v-icon>
                 </v-btn>
@@ -168,8 +166,6 @@
                 <div class="k-relative">
                   <!--          菜单按钮-->
                   <v-btn
-                      v-bind="attrs"
-                      v-on="on"
                       fab
                       small
                       text
@@ -299,8 +295,8 @@ import googleicon from './assets/logos/google.svg'
 import MainPage from './components/MainPage';
 import * as dayjs from 'dayjs'
 import appbarwebm from './assets/webm/appbarvideo.webm'
-import logo from './assets/logos/logo.svg'
-import lobo from './assets/logos/logo-black.svg'
+import logo from "./assets/logos/logo.svg";
+import lobo from "./assets/logos/logo-black.svg";
 
 export default {
   name: 'App',
@@ -309,15 +305,11 @@ export default {
   },
 
   data: () => ({
+    logos: [logo, lobo],
+
     lightoff: true,
     switchtip: false,
     lighticon: "mdi-lightning-bolt",
-    btncolor: ["deep-purple lighten-5", "grey darken-4", "amber darken-2", "red accent-4"],
-    initbtncolor: "deep-purple lighten-5",
-    fontcolorclass: ["k-font-white-3", "k-font-black-1"],
-    backgrounds: ["k-back-black-1", "k-back-white-2"],
-    appbarcolor: ["grey darken-4", "white"],
-    logo: [logo, lobo],
 
     inputerValue: "",
     whichsearchs: ["Google", "Baidu"],
@@ -344,6 +336,7 @@ export default {
     user: {
       uname: "kty",
       uid: 1001,
+      collection: "我的收藏",
       logout: "退出登录",
       gender: "女",
       umail: "邮箱",
@@ -423,9 +416,6 @@ export default {
     ],
   }),
   methods: {
-    reloadpage() {
-      window.location.reload(true)
-    },
     clear() {
       this.inputerValue = ""
     },
@@ -434,6 +424,8 @@ export default {
         window.location = "https://www.google.com.hk/search?q=" + this.inputerValue
       } else if (this.whichsearch == "Baidu" && this.inputerValue != "") {
         window.location = "https://www.baidu.com/s?wd=" + this.inputerValue
+      }else if (this.inputerValue==""){
+        alert('您必须输入内容才能搜索')
       }
     },
     changeLogoText() {
@@ -447,12 +439,15 @@ export default {
         this.searchLogo = s[0]
       }
     },
+    reloadpage() {
+      window.location.reload(true)
+    },
   },
   computed: {
     cols() {
       const {lg, sm} = this.$vuetify.breakpoint
       if (lg) {
-        return 4
+        return 5
       } else {
         if (sm) {
           return 6
